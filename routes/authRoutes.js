@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
   }
 
   try {
-    // Fetch user from PostgreSQL
+    
     const userResult = await pool.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
@@ -72,13 +72,13 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    // Compare passwords
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    // Normally, you should generate a JWT token here
+    
     res.json({ message: "Login successful!", token: "dummy-jwt-token" });
   } catch (error) {
     console.error(error);
