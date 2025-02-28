@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://your-frontend.onrender.com"],
+    origin: ["http://localhost:5173", "https://frontend-repo-1ebj.onrender.com"],
     credentials: true,
   })
 );
