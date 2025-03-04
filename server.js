@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://frontend-repo-1ebj.onrender.com"],
+    origin: ["http://localhost:5173","https://frontend-repo-1ebj.onrender.com"],
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type, Authorization",
