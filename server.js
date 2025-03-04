@@ -12,8 +12,15 @@ app.use(
   cors({
     origin: ["https://frontend-repo-1ebj.onrender.com"],
     credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type, Authorization",
   })
 );
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
