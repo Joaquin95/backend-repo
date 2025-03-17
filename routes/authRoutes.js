@@ -30,8 +30,8 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "server error" });
+    console.error("error during signup:", error.message);
+    res.status(500).json({ error: "Internal server error. PLease try again" });
   }
 });
 
