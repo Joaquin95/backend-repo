@@ -63,7 +63,6 @@ router.post("/login", async (req, res) => {
   }
 
   try {
-    
     const userResult = await pool.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
@@ -74,18 +73,20 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    
     res.json({ message: "Login successful!", token: "dummy-jwt-token" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
+
+  console.log("Email received:", email);
+  console.log("Password received:", password);
+  console.log("User from DB:", user);
 });
 
 export default router;
