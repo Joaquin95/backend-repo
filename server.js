@@ -8,12 +8,24 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://frontend-repo-1ebj.onrender.com",
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:5173","https://frontend-repo-1ebj.onrender.com"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type, Authorization",
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
