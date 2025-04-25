@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import pool from "../db.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -78,7 +79,14 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    res.json({ message: "Login successful!", token: "dummy-jwt-token" });
+    const token =jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET, // stores this key safely in .env file
+      { expiresIn: "1h" } // token expiration time
+    );
+
+    res.json({ message: "Login successful!", token });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
