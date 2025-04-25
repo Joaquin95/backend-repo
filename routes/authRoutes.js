@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 const router = express.Router();
 
