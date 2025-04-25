@@ -84,9 +84,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 
-  console.log("Email received:", email);
-  console.log("Password received:", password);
-  console.log("User from DB:", user);
 });
 
 export default router;
