@@ -14,21 +14,25 @@ router.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+
     const userExists = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE LOWER(email) = LOWER($1)",
       [email]
     );
+
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: "This Email is already in use" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await pool.query("INSERT INTO users (email, password) VALUES ($1, $2)", [
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+    // Insert the new user into the database`
+    await pool.query("INSERT INTO users (email, password) VALUES ($1, $2)", [ 
       email,
       hashedPassword,
     ]);
 
-    await sendConfirmationEmail(email);
+    await sendConfirmationEmail(email); // Sends confirmation to email
 
     res.status(201).json({ message: "User registered successfully!" });
   } catch (error) {
@@ -52,7 +56,9 @@ const sendConfirmationEmail = async (email) => {
     subject: "Welcome to CryptoGreek",
     text: "Thank you for signing up. We're excited to have you on board!",
   };
-  await transporter.sendMail(mailOptions);
+
+  await transporter.sendMail(mailOptions); // Send the email
+  console.log("Confirmation email sent to:", email);
 };
 
 router.post("/login", async (req, res) => {
@@ -65,19 +71,20 @@ router.post("/login", async (req, res) => {
   }
 
   try {
+
     const userResult = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE LOWER(email) = LOWER($1)",
       [email]
     );
     const user = userResult.rows[0];
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials." });
+      return res.status(404).json({ error: "Email not found. Please sign up." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid credentials." });
+      return res.status(401).json({ error: "Incorrect password. Please try again." });
     }
 
     const token =jwt.sign(
@@ -90,7 +97,7 @@ router.post("/login", async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error,  please try again later." });
   }
 
 });
